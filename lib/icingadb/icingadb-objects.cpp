@@ -143,7 +143,7 @@ void IcingaDB::UpdateAllConfigObjects()
 	double startTime = Utility::GetTime();
 
 	// Use a Workqueue to pack objects in parallel
-	WorkQueue upq(25000, Configuration::Concurrency);
+	WorkQueue upq(25000, Configuration::Concurrency, LogNotice);
 	upq.SetName("IcingaDB:ConfigDump");
 
 	std::vector<Type::Ptr> types = GetTypes();
@@ -186,7 +186,7 @@ void IcingaDB::UpdateAllConfigObjects()
 		std::vector<String> keys = GetTypeOverwriteKeys(lcType);
 		DeleteKeys(rcon, keys, Prio::Config);
 
-		WorkQueue upqObjectType(25000, Configuration::Concurrency);
+		WorkQueue upqObjectType(25000, Configuration::Concurrency, LogNotice);
 		upqObjectType.SetName("IcingaDB:ConfigDump:" + lcType);
 
 		std::map<String, String> redisCheckSums;
