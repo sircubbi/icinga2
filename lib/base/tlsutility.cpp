@@ -948,7 +948,7 @@ String BinaryToHex(const unsigned char* data, size_t length) {
 	return output;
 }
 
-bool VerifyCertificate(const String& caFile, const std::shared_ptr<X509> &certificate, const String& crlFile)
+bool VerifyCertificate(const String& caFile, const std::shared_ptr<X509> &certificate, const String& crlFile, STACK_OF(X509) *chain)
 {
 	std::shared_ptr<X509> caCertificate = GetX509Certificate(caFile);
 
@@ -966,7 +966,7 @@ bool VerifyCertificate(const String& caFile, const std::shared_ptr<X509> &certif
 	X509_STORE_load_locations(store, caFile.CStr(), NULL); /* ignore any errors for the moment, since this is just the convenient way to add full chain */
 
 	X509_STORE_CTX *csc = X509_STORE_CTX_new();
-	X509_STORE_CTX_init(csc, store, certificate.get(), nullptr);
+	X509_STORE_CTX_init(csc, store, certificate.get(), chain);
 
 	int rc = X509_verify_cert(csc);
 
